@@ -1,9 +1,9 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Sage {
 
-    private static Task[] tasks = new Task[100];
-    private static int taskCount = 0;
+    private static ArrayList<Task> tasks = new ArrayList<>();
 
     static String name = "sage";
 
@@ -33,31 +33,43 @@ public class Sage {
     public static void listTasks() {
         printLine();
         System.out.println(" Here are the tasks in your list:");
-        for (int i = 0; i < taskCount; i++) {
-            System.out.println(ANSI_BLUE + (i + 1) + "." + tasks[i] + ANSI_RESET);
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println(ANSI_BLUE + (i + 1) + "." + tasks.get(i) + ANSI_RESET);
         }
         printLine();
     }
 
     public static void markTask(int taskIndex) throws SageException {
-        if (taskIndex < 0 || taskIndex >= taskCount) {
+        if (taskIndex < 0 || taskIndex >= tasks.size()) {
             throw new SageException("Invalid task number.");
         }
-        tasks[taskIndex].markAsDone();
+        tasks.get(taskIndex).markAsDone();
         printLine();
         System.out.println(ANSI_GREEN + " Nice! I've marked this task as done:" + ANSI_RESET);
-        System.out.println(ANSI_GREEN + "   " + tasks[taskIndex] + ANSI_RESET);
+        System.out.println(ANSI_GREEN + "   " + tasks.get(taskIndex) + ANSI_RESET);
         printLine();
     }
 
     public static void unmarkTask(int taskIndex) throws SageException {
-        if (taskIndex < 0 || taskIndex >= taskCount) {
+        if (taskIndex < 0 || taskIndex >= tasks.size()) {
             throw new SageException("Invalid task number.");
         }
-        tasks[taskIndex].unmarkAsDone();
+        tasks.get(taskIndex).unmarkAsDone();
         printLine();
         System.out.println(ANSI_GREEN + " OK, I've marked this task as not done yet:" + ANSI_RESET);
-        System.out.println(ANSI_GREEN + "   " + tasks[taskIndex] + ANSI_RESET);
+        System.out.println(ANSI_GREEN + "   " + tasks.get(taskIndex) + ANSI_RESET);
+        printLine();
+    }
+
+    public static void deleteTask(int taskIndex) throws SageException {
+        if (taskIndex < 0 || taskIndex >= tasks.size()) {
+            throw new SageException("Invalid task number.");
+        }
+        Task removedTask = tasks.remove(taskIndex);
+        printLine();
+        System.out.println(ANSI_GREEN + " Noted. I've removed this task:" + ANSI_RESET);
+        System.out.println(ANSI_GREEN + "   " + removedTask + ANSI_RESET);
+        System.out.println(ANSI_GREEN + " Now you have " + tasks.size() + " tasks in the list." + ANSI_RESET);
         printLine();
     }
 
@@ -103,16 +115,22 @@ public class Sage {
                         int taskIndexUnmark = Integer.parseInt(parts[1]) - 1;
                         unmarkTask(taskIndexUnmark);
                         break;
+                    case "delete":
+                        if (parts.length < 2) {
+                            throw new SageException("Please specify the task number to delete.");
+                        }
+                        int taskIndexDelete = Integer.parseInt(parts[1]) - 1;
+                        deleteTask(taskIndexDelete);
+                        break;
                     case "todo":
                         if (parts.length < 2 || parts[1].trim().isEmpty()) {
                             throw new SageException("The description of a todo cannot be empty.");
                         }
-                        tasks[taskCount] = new Todo(parts[1]);
-                        taskCount++;
+                        tasks.add(new Todo(parts[1]));
                         printLine();
                         System.out.println(ANSI_GREEN + " Got it. I've added this task:" + ANSI_RESET);
-                        System.out.println(ANSI_GREEN + "   " + tasks[taskCount - 1] + ANSI_RESET);
-                        System.out.println(ANSI_GREEN + " Now you have " + taskCount + " tasks in the list." + ANSI_RESET);
+                        System.out.println(ANSI_GREEN + "   " + tasks.get(tasks.size() - 1) + ANSI_RESET);
+                        System.out.println(ANSI_GREEN + " Now you have " + tasks.size() + " tasks in the list." + ANSI_RESET);
                         printLine();
                         break;
                     case "deadline":
@@ -123,12 +141,11 @@ public class Sage {
                             throw new SageException("Invalid deadline format. Please use: deadline <description> /by <date>");
                         }
                         String[] deadlineParts = parts[1].split(" /by ");
-                        tasks[taskCount] = new Deadline(deadlineParts[0], deadlineParts[1]);
-                        taskCount++;
+                        tasks.add(new Deadline(deadlineParts[0], deadlineParts[1]));
                         printLine();
                         System.out.println(ANSI_GREEN + " Got it. I've added this task:" + ANSI_RESET);
-                        System.out.println(ANSI_GREEN + "   " + tasks[taskCount - 1] + ANSI_RESET);
-                        System.out.println(ANSI_GREEN + " Now you have " + taskCount + " tasks in the list." + ANSI_RESET);
+                        System.out.println(ANSI_GREEN + "   " + tasks.get(tasks.size() - 1) + ANSI_RESET);
+                        System.out.println(ANSI_GREEN + " Now you have " + tasks.size() + " tasks in the list." + ANSI_RESET);
                         printLine();
                         break;
                     case "event":
@@ -140,12 +157,11 @@ public class Sage {
                         }
                         String[] eventParts = parts[1].split(" /from ");
                         String[] fromToParts = eventParts[1].split(" /to ");
-                        tasks[taskCount] = new Event(eventParts[0], fromToParts[0], fromToParts[1]);
-                        taskCount++;
+                        tasks.add(new Event(eventParts[0], fromToParts[0], fromToParts[1]));
                         printLine();
                         System.out.println(ANSI_GREEN + " Got it. I've added this task:" + ANSI_RESET);
-                        System.out.println(ANSI_GREEN + "   " + tasks[taskCount - 1] + ANSI_RESET);
-                        System.out.println(ANSI_GREEN + " Now you have " + taskCount + " tasks in the list." + ANSI_RESET);
+                        System.out.println(ANSI_GREEN + "   " + tasks.get(tasks.size() - 1) + ANSI_RESET);
+                        System.out.println(ANSI_GREEN + " Now you have " + tasks.size() + " tasks in the list." + ANSI_RESET);
                         printLine();
                         break;
                     default:
