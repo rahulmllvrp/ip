@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Sage {
 
-    private static String[] tasks = new String[100];
+    private static Task[] tasks = new Task[100];
     private static int taskCount = 0;
 
     static String name = "sage";
@@ -19,7 +19,6 @@ public class Sage {
     public static void greet() {
         printLine();
         System.out.println(ANSI_GREEN + " Hello! I'm " + name + ANSI_RESET);
-        System.out.println(ANSI_GREEN + " I can play 'Sage says' and manage a task list for you." + ANSI_RESET);
         System.out.println(ANSI_GREEN + " What can I do for you?" + ANSI_RESET);
         printLine();
     }
@@ -30,21 +29,47 @@ public class Sage {
         printLine();
     }
 
-    public static void addTask(String task) {
-        tasks[taskCount] = task;
+    public static void addTask(String description) {
+        tasks[taskCount] = new Task(description);
         taskCount++;
         printLine();
-        System.out.println(ANSI_GREEN + " added: " + task + ANSI_RESET);
+        System.out.println(ANSI_GREEN + " added: " + description + ANSI_RESET);
         printLine();
     }
 
     public static void listTasks() {
         printLine();
+        System.out.println(" Here are the tasks in your list:");
         for (int i = 0; i < taskCount; i++) {
-            System.out.println(ANSI_BLUE + (i + 1) + ". " + tasks[i] + ANSI_RESET);
+            System.out.println(ANSI_BLUE + (i + 1) + "." + tasks[i] + ANSI_RESET);
         }
         printLine();
     }
+
+    public static void markTask(int taskIndex) {
+        if (taskIndex >= 0 && taskIndex < taskCount) {
+            tasks[taskIndex].markAsDone();
+            printLine();
+            System.out.println(ANSI_GREEN + " Nice! I've marked this task as done:" + ANSI_RESET);
+            System.out.println(ANSI_GREEN + "   " + tasks[taskIndex] + ANSI_RESET);
+            printLine();
+        } else {
+            System.out.println("Invalid task number.");
+        }
+    }
+
+    public static void unmarkTask(int taskIndex) {
+        if (taskIndex >= 0 && taskIndex < taskCount) {
+            tasks[taskIndex].unmarkAsDone();
+            printLine();
+            System.out.println(ANSI_GREEN + " OK, I've marked this task as not done yet:" + ANSI_RESET);
+            System.out.println(ANSI_GREEN + "   " + tasks[taskIndex] + ANSI_RESET);
+            printLine();
+        } else {
+            System.out.println("Invalid task number.");
+        }
+    }
+
 
     public static void main(String[] args) {
         greet();
@@ -54,21 +79,37 @@ public class Sage {
         while (true) {
             input = scanner.nextLine();
 
-            if (input.equals("bye")) {
-                break;
-            } else if (input.equals("list")) {
-                listTasks();
-            } else if (input.toLowerCase().startsWith("sage says")) {
-                String output = input.toLowerCase().substring(9).trim();
+            if (input.startsWith("Sage says")) {
+                String output = input.substring("Sage says".length()).trim();
                 printLine();
                 System.out.println(ANSI_BLUE + output + ANSI_RESET);
                 printLine();
-            } else {
-                addTask(input);
+                continue;
+            }
+
+            String[] parts = input.split(" ");
+            String command = parts[0];
+
+            switch (command) {
+                case "bye":
+                    scanner.close();
+                    exit();
+                    return;
+                case "list":
+                    listTasks();
+                    break;
+                case "mark":
+                    int taskIndexMark = Integer.parseInt(parts[1]) - 1;
+                    markTask(taskIndexMark);
+                    break;
+                case "unmark":
+                    int taskIndexUnmark = Integer.parseInt(parts[1]) - 1;
+                    unmarkTask(taskIndexUnmark);
+                    break;
+                default:
+                    addTask(input);
+                    break;
             }
         }
-
-        scanner.close();
-        exit();
     }
 }
