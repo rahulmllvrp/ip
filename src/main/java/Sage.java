@@ -29,14 +29,6 @@ public class Sage {
         printLine();
     }
 
-    public static void addTask(String description) {
-        tasks[taskCount] = new Task(description);
-        taskCount++;
-        printLine();
-        System.out.println(ANSI_GREEN + " added: " + description + ANSI_RESET);
-        printLine();
-    }
-
     public static void listTasks() {
         printLine();
         System.out.println(" Here are the tasks in your list:");
@@ -78,6 +70,8 @@ public class Sage {
 
         while (true) {
             input = scanner.nextLine();
+            String[] parts = input.split(" ", 2);
+            String command = parts[0];
 
             if (input.startsWith("Sage says")) {
                 String output = input.substring("Sage says".length()).trim();
@@ -86,9 +80,6 @@ public class Sage {
                 printLine();
                 continue;
             }
-
-            String[] parts = input.split(" ");
-            String command = parts[0];
 
             switch (command) {
                 case "bye":
@@ -106,9 +97,38 @@ public class Sage {
                     int taskIndexUnmark = Integer.parseInt(parts[1]) - 1;
                     unmarkTask(taskIndexUnmark);
                     break;
-                default:
-                    addTask(input);
+                case "todo":
+                    tasks[taskCount] = new Todo(parts[1]);
+                    taskCount++;
+                    printLine();
+                    System.out.println(ANSI_GREEN + " Got it. I've added this task:" + ANSI_RESET);
+                    System.out.println(ANSI_GREEN + "   " + tasks[taskCount - 1] + ANSI_RESET);
+                    System.out.println(ANSI_GREEN + " Now you have " + taskCount + " tasks in the list." + ANSI_RESET);
+                    printLine();
                     break;
+                case "deadline":
+                    String[] deadlineParts = parts[1].split(" /by ");
+                    tasks[taskCount] = new Deadline(deadlineParts[0], deadlineParts[1]);
+                    taskCount++;
+                    printLine();
+                    System.out.println(ANSI_GREEN + " Got it. I've added this task:" + ANSI_RESET);
+                    System.out.println(ANSI_GREEN + "   " + tasks[taskCount - 1] + ANSI_RESET);
+                    System.out.println(ANSI_GREEN + " Now you have " + taskCount + " tasks in the list." + ANSI_RESET);
+                    printLine();
+                    break;
+                case "event":
+                    String[] eventParts = parts[1].split(" /from ");
+                    String[] fromToParts = eventParts[1].split(" /to ");
+                    tasks[taskCount] = new Event(eventParts[0], fromToParts[0], fromToParts[1]);
+                    taskCount++;
+                    printLine();
+                    System.out.println(ANSI_GREEN + " Got it. I've added this task:" + ANSI_RESET);
+                    System.out.println(ANSI_GREEN + "   " + tasks[taskCount - 1] + ANSI_RESET);
+                    System.out.println(ANSI_GREEN + " Now you have " + taskCount + " tasks in the list." + ANSI_RESET);
+                    printLine();
+                    break;
+                default:
+                    System.out.println("I don't understand that command.");
             }
         }
     }
