@@ -83,7 +83,7 @@ public class Sage {
             try {
                 input = scanner.nextLine();
                 String[] parts = input.split(" ", 2);
-                String command = parts[0];
+                Command command = Command.fromString(parts[0]);
 
                 if (input.startsWith("Sage says")) {
                     String output = input.substring("Sage says".length()).trim();
@@ -94,35 +94,35 @@ public class Sage {
                 }
 
                 switch (command) {
-                    case "bye":
+                    case BYE:
                         scanner.close();
                         exit();
                         return;
-                    case "list":
+                    case LIST:
                         listTasks();
                         break;
-                    case "mark":
+                    case MARK:
                         if (parts.length < 2) {
                             throw new SageException("Please specify the task number to mark.");
                         }
                         int taskIndexMark = Integer.parseInt(parts[1]) - 1;
                         markTask(taskIndexMark);
                         break;
-                    case "unmark":
+                    case UNMARK:
                         if (parts.length < 2) {
                             throw new SageException("Please specify the task number to unmark.");
                         }
                         int taskIndexUnmark = Integer.parseInt(parts[1]) - 1;
                         unmarkTask(taskIndexUnmark);
                         break;
-                    case "delete":
+                    case DELETE:
                         if (parts.length < 2) {
                             throw new SageException("Please specify the task number to delete.");
                         }
                         int taskIndexDelete = Integer.parseInt(parts[1]) - 1;
                         deleteTask(taskIndexDelete);
                         break;
-                    case "todo":
+                    case TODO:
                         if (parts.length < 2 || parts[1].trim().isEmpty()) {
                             throw new SageException("The description of a todo cannot be empty.");
                         }
@@ -133,7 +133,7 @@ public class Sage {
                         System.out.println(ANSI_GREEN + " Now you have " + tasks.size() + " tasks in the list." + ANSI_RESET);
                         printLine();
                         break;
-                    case "deadline":
+                    case DEADLINE:
                         if (parts.length < 2 || parts[1].trim().isEmpty()) {
                             throw new SageException("The description of a deadline cannot be empty.");
                         }
@@ -148,7 +148,7 @@ public class Sage {
                         System.out.println(ANSI_GREEN + " Now you have " + tasks.size() + " tasks in the list." + ANSI_RESET);
                         printLine();
                         break;
-                    case "event":
+                    case EVENT:
                         if (parts.length < 2 || parts[1].trim().isEmpty()) {
                             throw new SageException("The description of an event cannot be empty.");
                         }
@@ -164,7 +164,7 @@ public class Sage {
                         System.out.println(ANSI_GREEN + " Now you have " + tasks.size() + " tasks in the list." + ANSI_RESET);
                         printLine();
                         break;
-                    default:
+                    case UNKNOWN:
                         throw new SageException("I'm sorry, but I don't know what that means :-(");
                 }
             } catch (SageException e) {
