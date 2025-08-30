@@ -1,11 +1,7 @@
-public enum Command {
-    BYE, LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT, UNKNOWN, SAGE;
+public abstract class Command {
+    public abstract void execute(TaskList tasks, Ui ui, Storage storage) throws SageException;
 
-    public static Command fromString(String s) {
-        try {
-            return Command.valueOf(s.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            return UNKNOWN;
-        }
+    public boolean isExit() {
+        return false;
     }
 }
