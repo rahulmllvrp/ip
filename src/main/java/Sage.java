@@ -3,7 +3,9 @@ import java.util.Scanner;
 
 public class Sage {
 
-    private static ArrayList<Task> tasks = new ArrayList<>();
+    private static ArrayList<Task> tasks;
+    private static Storage storage;
+    private static final String FILE_PATH = "./data/sage.txt";
 
     static String name = "sage";
 
@@ -39,11 +41,22 @@ public class Sage {
         printLine();
     }
 
+    private static void saveTasks() {
+        try {
+            storage.save(tasks);
+        } catch (SageException e) {
+            printLine();
+            System.out.println(ANSI_RED + " OOPS!!! " + e.getMessage() + ANSI_RESET);
+            printLine();
+        }
+    }
+
     public static void markTask(int taskIndex) throws SageException {
         if (taskIndex < 0 || taskIndex >= tasks.size()) {
             throw new SageException("Invalid task number.");
         }
         tasks.get(taskIndex).markAsDone();
+        saveTasks();
         printLine();
         System.out.println(ANSI_GREEN + " Nice! I've marked this task as done:" + ANSI_RESET);
         System.out.println(ANSI_GREEN + "   " + tasks.get(taskIndex) + ANSI_RESET);
@@ -55,6 +68,7 @@ public class Sage {
             throw new SageException("Invalid task number.");
         }
         tasks.get(taskIndex).unmarkAsDone();
+        saveTasks();
         printLine();
         System.out.println(ANSI_GREEN + " OK, I've marked this task as not done yet:" + ANSI_RESET);
         System.out.println(ANSI_GREEN + "   " + tasks.get(taskIndex) + ANSI_RESET);
@@ -66,6 +80,7 @@ public class Sage {
             throw new SageException("Invalid task number.");
         }
         Task removedTask = tasks.remove(taskIndex);
+        saveTasks();
         printLine();
         System.out.println(ANSI_GREEN + " Noted. I've removed this task:" + ANSI_RESET);
         System.out.println(ANSI_GREEN + "   " + removedTask + ANSI_RESET);
@@ -76,6 +91,17 @@ public class Sage {
 
     public static void main(String[] args) {
         greet();
+        storage = new Storage(FILE_PATH);
+
+        try {
+            tasks = storage.load();
+        } catch (SageException e) {
+            printLine();
+            System.out.println(ANSI_RED + " OOPS!!! " + e.getMessage() + ANSI_RESET);
+            printLine();
+            tasks = new ArrayList<>();
+        }
+
         Scanner scanner = new Scanner(System.in);
         String input;
 
@@ -127,6 +153,7 @@ public class Sage {
                             throw new SageException("The description of a todo cannot be empty.");
                         }
                         tasks.add(new Todo(parts[1]));
+                        saveTasks();
                         printLine();
                         System.out.println(ANSI_GREEN + " Got it. I've added this task:" + ANSI_RESET);
                         System.out.println(ANSI_GREEN + "   " + tasks.get(tasks.size() - 1) + ANSI_RESET);
@@ -142,6 +169,7 @@ public class Sage {
                         }
                         String[] deadlineParts = parts[1].split(" /by ");
                         tasks.add(new Deadline(deadlineParts[0], deadlineParts[1]));
+                        saveTasks();
                         printLine();
                         System.out.println(ANSI_GREEN + " Got it. I've added this task:" + ANSI_RESET);
                         System.out.println(ANSI_GREEN + "   " + tasks.get(tasks.size() - 1) + ANSI_RESET);
@@ -158,6 +186,7 @@ public class Sage {
                         String[] eventParts = parts[1].split(" /from ");
                         String[] fromToParts = eventParts[1].split(" /to ");
                         tasks.add(new Event(eventParts[0], fromToParts[0], fromToParts[1]));
+                        saveTasks();
                         printLine();
                         System.out.println(ANSI_GREEN + " Got it. I've added this task:" + ANSI_RESET);
                         System.out.println(ANSI_GREEN + "   " + tasks.get(tasks.size() - 1) + ANSI_RESET);
