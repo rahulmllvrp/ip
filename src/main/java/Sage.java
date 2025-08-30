@@ -1,3 +1,6 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -88,6 +91,14 @@ public class Sage {
         printLine();
     }
 
+    private static LocalDateTime parseDateTime(String dateTime) throws SageException {
+        try {
+            return LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern("d/M/yyyy HHmm"));
+        } catch (DateTimeParseException e) {
+            throw new SageException("Invalid date format. Please use: d/M/yyyy HHmm");
+        }
+    }
+
 
     public static void main(String[] args) {
         greet();
@@ -165,10 +176,11 @@ public class Sage {
                             throw new SageException("The description of a deadline cannot be empty.");
                         }
                         if (!parts[1].contains(" /by ")) {
-                            throw new SageException("Invalid deadline format. Please use: deadline <description> /by <date>");
+                            throw new SageException("Invalid deadline format. Please use: deadline <description> /by <d/M/yyyy HHmm>");
                         }
                         String[] deadlineParts = parts[1].split(" /by ");
-                        tasks.add(new Deadline(deadlineParts[0], deadlineParts[1]));
+                        LocalDateTime by = parseDateTime(deadlineParts[1]);
+                        tasks.add(new Deadline(deadlineParts[0], by));
                         saveTasks();
                         printLine();
                         System.out.println(ANSI_GREEN + " Got it. I've added this task:" + ANSI_RESET);
@@ -181,11 +193,13 @@ public class Sage {
                             throw new SageException("The description of an event cannot be empty.");
                         }
                         if (!parts[1].contains(" /from ") || !parts[1].contains(" /to ")) {
-                            throw new SageException("Invalid event format. Please use: event <description> /from <date> /to <date>");
+                            throw new SageException("Invalid event format. Please use: event <description> /from <d/M/yyyy HHmm> /to <d/M/yyyy HHmm>");
                         }
                         String[] eventParts = parts[1].split(" /from ");
                         String[] fromToParts = eventParts[1].split(" /to ");
-                        tasks.add(new Event(eventParts[0], fromToParts[0], fromToParts[1]));
+                        LocalDateTime from = parseDateTime(fromToParts[0]);
+                        LocalDateTime to = parseDateTime(fromToParts[1]);
+                        tasks.add(new Event(eventParts[0], from, to));
                         saveTasks();
                         printLine();
                         System.out.println(ANSI_GREEN + " Got it. I've added this task:" + ANSI_RESET);
