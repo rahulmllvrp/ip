@@ -10,6 +10,7 @@ import sage.command.AddTodoCommand;
 import sage.command.Command;
 import sage.command.DeleteCommand;
 import sage.command.ExitCommand;
+import sage.command.FindCommand;
 import sage.command.ListCommand;
 import sage.command.MarkCommand;
 import sage.command.UnmarkCommand;
@@ -39,6 +40,8 @@ public class Parser {
             return parseDeadlineCommand(arguments);
         case "event":
             return parseEventCommand(arguments);
+        case "find":
+            return parseFindCommand(arguments);
         default:
             throw new SageException("I'm sorry, but I don't know what that means :-(");
         }
@@ -99,6 +102,13 @@ public class Parser {
         LocalDateTime from = parseDateTime(fromToParts[0]);
         LocalDateTime to = parseDateTime(fromToParts[1]);
         return new AddEventCommand(eventParts[0], from, to);
+    }
+
+    private static Command parseFindCommand(String arguments) throws SageException {
+        if (arguments.trim().isEmpty()) {
+            throw new SageException("The keyword for find cannot be empty.");
+        }
+        return new FindCommand(arguments);
     }
 
     public static LocalDateTime parseDateTime(String dateTime) throws SageException {
