@@ -1,3 +1,5 @@
+package sage.storage;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -5,6 +7,12 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import sage.exception.SageException;
+import sage.task.Deadline;
+import sage.task.Event;
+import sage.task.Task;
+import sage.task.Todo;
 
 public class Storage {
     private final File file;

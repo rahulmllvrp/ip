@@ -1,3 +1,11 @@
+package sage.command;
+
+import sage.exception.SageException;
+import sage.storage.Storage;
+import sage.task.Task;
+import sage.task.TaskList;
+import sage.ui.Ui;
+
 public class DeleteCommand extends Command {
     private final int taskIndex;
 

@@ -1,4 +1,13 @@
+package sage.main;
+
 import java.time.LocalDateTime;
+
+import sage.command.Command;
+import sage.exception.SageException;
+import sage.parser.Parser;
+import sage.storage.Storage;
+import sage.task.TaskList;
+import sage.ui.Ui;
 
 public class Sage {
 
