@@ -42,6 +42,13 @@ public abstract class Task {
     }
 
     /**
+     * Get the description of the tasl
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
      * Returns a string representation of the task, including its status icon and description.
      * @return A formatted string representing the task.
      */

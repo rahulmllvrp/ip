@@ -1,6 +1,8 @@
 package sage.ui;
 
 import java.util.Scanner;
+import java.util.ArrayList;
+import sage.task.Task;
 
 /**
  * Deals with interactions with the user.
@@ -74,6 +76,15 @@ public class Ui {
     public void showMessage(String message) {
         showLine();
         System.out.println(message);
+        showLine();
+    }
+  
+    public void showMatchingTasks(ArrayList<Task> tasks) {
+        showLine();
+        System.out.println("Here are the matching tasks in your list:");
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println(" " + (i + 1) + "." + tasks.get(i).toString());
+        }
         showLine();
     }
 }
