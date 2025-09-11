@@ -29,6 +29,7 @@ public class Parser {
      * @throws SageException If the command is unrecognized or has invalid format/arguments.
      */
     public static Command parse(String fullCommand) throws SageException {
+        assert fullCommand != null && !fullCommand.trim().isEmpty() : "Command string cannot be null or empty";
         String[] parts = fullCommand.split(" ", 2);
         String commandWord = parts[0];
         String arguments = parts.length > 1 ? parts[1] : "";
@@ -64,6 +65,7 @@ public class Parser {
      * @throws SageException If the arguments are invalid or missing.
      */
     private static Command parseMarkCommand(String arguments) throws SageException {
+        assert arguments != null : "Arguments string cannot be null";
         if (arguments.isEmpty()) {
             throw new SageException("Please specify the task number to mark.");
         }
@@ -78,6 +80,7 @@ public class Parser {
      * @throws SageException If the arguments are invalid or missing.
      */
     private static Command parseUnmarkCommand(String arguments) throws SageException {
+        assert arguments != null : "Arguments string cannot be null";
         if (arguments.isEmpty()) {
             throw new SageException("Please specify the task number to unmark.");
         }
@@ -92,6 +95,7 @@ public class Parser {
      * @throws SageException If the arguments are invalid or missing.
      */
     private static Command parseDeleteCommand(String arguments) throws SageException {
+        assert arguments != null : "Arguments string cannot be null";
         if (arguments.isEmpty()) {
             throw new SageException("Please specify the task number to delete.");
         }
@@ -106,6 +110,7 @@ public class Parser {
      * @throws SageException If the arguments are invalid or missing.
      */
     private static Command parseTodoCommand(String arguments) throws SageException {
+        assert arguments != null : "Arguments string cannot be null";
         if (arguments.trim().isEmpty()) {
             throw new SageException("The description of a todo cannot be empty.");
         }
@@ -119,6 +124,7 @@ public class Parser {
      * @throws SageException If the arguments are invalid or missing, or date format is incorrect.
      */
     private static Command parseDeadlineCommand(String arguments) throws SageException {
+        assert arguments != null : "Arguments string cannot be null";
         if (arguments.trim().isEmpty()) {
             throw new SageException("The description of a deadline cannot be empty.");
         }
@@ -137,6 +143,7 @@ public class Parser {
      * @throws SageException If the arguments are invalid or missing, or date format is incorrect.
      */
     private static Command parseEventCommand(String arguments) throws SageException {
+        assert arguments != null : "Arguments string cannot be null";
         if (arguments.trim().isEmpty()) {
             throw new SageException("The description of an event cannot be empty.");
         }
@@ -158,6 +165,7 @@ public class Parser {
      * @throws SageException If the keyword is empty.
      */
     private static Command parseFindCommand(String arguments) throws SageException {
+        assert arguments != null : "Arguments string cannot be null";
         if (arguments.trim().isEmpty()) {
             throw new SageException("The keyword for find cannot be empty.");
         }
