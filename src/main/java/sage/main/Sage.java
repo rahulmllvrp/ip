@@ -34,7 +34,7 @@ public class Sage {
         try {
             tasks = new TaskList(storage.load());
         } catch (SageException e) {
-            ui.showLoadingErrorAndReturn();
+            ui.getLoadingError();
             tasks = new TaskList();
         }
     }
@@ -50,11 +50,11 @@ public class Sage {
             storage.save(tasks.getTasks());
             return response;
         } catch (SageException e) {
-            return ui.showErrorAndReturn(e.getMessage());
+            return ui.getErrorMessage(e.getMessage());
         }
     }
 
     public String getWelcomeMessage() {
-        return ui.showWelcomeAndReturn();
+        return ui.getWelcomeMessage();
     }
 }
