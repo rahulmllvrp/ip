@@ -31,6 +31,7 @@ public class TaskList {
      * @param task The Task object to be added.
      */
     public void addTask(Task task) {
+        assert task != null : "Task to be added cannot be null";
         tasks.add(task);
     }
 
@@ -40,6 +41,7 @@ public class TaskList {
      * @return The Task object that was removed.
      */
     public Task deleteTask(int taskIndex) {
+        assert taskIndex >= 0 && taskIndex < tasks.size() : "Task index is out of bounds";
         return tasks.remove(taskIndex);
     }
 
@@ -49,6 +51,7 @@ public class TaskList {
      * @return The Task object at the specified index.
      */
     public Task getTask(int taskIndex) {
+        assert taskIndex >= 0 && taskIndex < tasks.size() : "Task index is out of bounds";
         return tasks.get(taskIndex);
     }
 
@@ -86,6 +89,7 @@ public class TaskList {
      * @param taskIndex The zero-based index of the task to mark as done.
      */
     public void markTask(int taskIndex) {
+        assert taskIndex >= 0 && taskIndex < tasks.size() : "Task index is out of bounds";
         tasks.get(taskIndex).markAsDone();
     }
 
@@ -94,10 +98,12 @@ public class TaskList {
      * @param taskIndex The zero-based index of the task to mark as not done.
      */
     public void unmarkTask(int taskIndex) {
+        assert taskIndex >= 0 && taskIndex < tasks.size() : "Task index is out of bounds";
         tasks.get(taskIndex).unmarkAsDone();
     }
 
     public ArrayList<Task> findTasks(String keyword) {
+        assert keyword != null : "Keyword cannot be null";
         ArrayList<Task> matchingTasks = new ArrayList<>();
         for (Task task : tasks) {
             if (task.getDescription().contains(keyword)) {
