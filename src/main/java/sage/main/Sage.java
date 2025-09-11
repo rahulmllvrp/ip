@@ -29,12 +29,13 @@ public class Sage {
      * @param filePath The path to the file where tasks are stored.
      */
     public Sage(String filePath) {
+        assert filePath != null && !filePath.trim().isEmpty() : "File path cannot be null or empty";
         ui = new Ui();
         storage = new Storage(filePath);
         try {
             tasks = new TaskList(storage.load());
         } catch (SageException e) {
-            ui.showLoadingErrorAndReturn();
+            ui.getLoadingError();
             tasks = new TaskList();
         }
     }
@@ -44,17 +45,18 @@ public class Sage {
      * Replace this stub with your completed method.
      */
     public String getResponse(String input) {
+        assert input != null && !input.trim().isEmpty() : "Input string cannot be null or empty";
         try {
             Command command = Parser.parse(input);
             String response = command.executeAndReturn(tasks, ui, storage);
             storage.save(tasks.getTasks());
             return response;
         } catch (SageException e) {
-            return ui.showErrorAndReturn(e.getMessage());
+            return ui.getErrorMessage(e.getMessage());
         }
     }
 
     public String getWelcomeMessage() {
-        return ui.showWelcomeAndReturn();
+        return ui.getWelcomeMessage();
     }
 }
