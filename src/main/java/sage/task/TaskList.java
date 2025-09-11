@@ -1,6 +1,7 @@
 package sage.task;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Represents a list of tasks.
@@ -22,7 +23,7 @@ public class TaskList {
      */
     public TaskList(ArrayList<Task> tasks) {
         assert tasks != null : "Task list to initialize cannot be null";
-        this.tasks = tasks;
+        this.tasks = new ArrayList<>(tasks);
     }
 
     /**
@@ -67,7 +68,7 @@ public class TaskList {
      * @return The ArrayList containing all tasks.
      */
     public ArrayList<Task> getTasks() {
-        return tasks;
+        return (ArrayList<Task>) Collections.unmodifiableList(tasks);
     }
 
     /**
@@ -76,7 +77,7 @@ public class TaskList {
      * @return A string containing the numbered list of tasks.
      */
     public String getTasksAsString() {
-        StringBuilder sb = new StringBuilder("Here are the tasks in your list:\n");
+        StringBuilder sb = new StringBuilder(UiMessages.TASKS_LIST_HEADER);
         for (int i = 0; i < tasks.size(); i++) {
             sb.append((i + 1) + "." + tasks.get(i).toString() + "\n");
         }
