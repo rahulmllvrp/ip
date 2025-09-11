@@ -2,7 +2,7 @@ package sage.command;
 
 import sage.storage.Storage;
 import sage.task.TaskList;
-import sage.ui.Ui;
+import sage.task.Ui;
 
 /**
  * Represents a command to list all tasks in the task list.
@@ -16,7 +16,7 @@ public class ListCommand extends Command {
      * @param storage The Storage (not used by this command).
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
-        ui.showMessage(tasks.getTasksAsString());
+    public String executeAndReturn(TaskList tasks, Ui ui, Storage storage) {
+        return ui.showMessageAndReturn(tasks.getTasksAsString());
     }
 }

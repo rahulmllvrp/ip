@@ -7,7 +7,7 @@ import sage.exception.SageException;
 import sage.parser.Parser;
 import sage.storage.Storage;
 import sage.task.TaskList;
-import sage.ui.Ui;
+import sage.task.Ui;
 
 /**
  * Represents the main class of the Sage chatbot application.
@@ -34,37 +34,27 @@ public class Sage {
         try {
             tasks = new TaskList(storage.load());
         } catch (SageException e) {
-            ui.showLoadingError();
+            ui.showLoadingErrorAndReturn();
             tasks = new TaskList();
         }
     }
 
     /**
-     * Runs the Sage chatbot application.
-     * Displays a welcome message, then enters a loop to read and execute commands
-     * until an exit command is received.
+     * You should have your own function to generate a response to user input.
+     * Replace this stub with your completed method.
      */
-    public void run() {
-        ui.showWelcome();
-        boolean isExit = false;
-        while (!isExit) {
-            try {
-                String fullCommand = ui.readCommand();
-                Command command = Parser.parse(fullCommand);
-                command.execute(tasks, ui, storage);
-                isExit = command.isExit();
-            } catch (SageException e) {
-                ui.showError(e.getMessage());
-            }
+    public String getResponse(String input) {
+        try {
+            Command command = Parser.parse(input);
+            String response = command.executeAndReturn(tasks, ui, storage);
+            storage.save(tasks.getTasks());
+            return response;
+        } catch (SageException e) {
+            return ui.showErrorAndReturn(e.getMessage());
         }
-        ui.showGoodbye();
     }
 
-    /**
-     * Main method to start the Sage chatbot application.
-     * @param args Command line arguments (not used).
-     */
-    public static void main(String[] args) {
-        new Sage(FILE_PATH).run();
+    public String getWelcomeMessage() {
+        return ui.showWelcomeAndReturn();
     }
 }

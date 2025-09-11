@@ -3,7 +3,7 @@ package sage.command;
 import sage.exception.SageException;
 import sage.storage.Storage;
 import sage.task.TaskList;
-import sage.ui.Ui;
+import sage.task.Ui;
 
 /**
  * Represents a command to mark a task as done.
@@ -29,9 +29,9 @@ public class MarkCommand extends Command {
      * @throws SageException If the task index is invalid.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws SageException {
+    public String executeAndReturn(TaskList tasks, Ui ui, Storage storage) throws SageException {
         tasks.markTask(taskIndex);
         storage.save(tasks.getTasks());
-        ui.showMessage("Nice! I've marked this task as done:\n   " + tasks.getTask(taskIndex));
+        return ui.showMessageAndReturn("Nice! I've marked this task as done:\n   " + tasks.getTask(taskIndex));
     }
 }

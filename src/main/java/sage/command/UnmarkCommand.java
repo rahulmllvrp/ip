@@ -3,7 +3,7 @@ package sage.command;
 import sage.exception.SageException;
 import sage.storage.Storage;
 import sage.task.TaskList;
-import sage.ui.Ui;
+import sage.task.Ui;
 
 /**
  * Represents a command to unmark a task as not done.
@@ -29,9 +29,9 @@ public class UnmarkCommand extends Command {
      * @throws SageException If the task index is invalid.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws SageException {
+    public String executeAndReturn(TaskList tasks, Ui ui, Storage storage) throws SageException {
         tasks.unmarkTask(taskIndex);
         storage.save(tasks.getTasks());
-        ui.showMessage("OK, I've marked this task as not done yet:\n   " + tasks.getTask(taskIndex));
+        return ui.showMessageAndReturn("OK, I've marked this task as not done yet:\n   " + tasks.getTask(taskIndex));
     }
 }

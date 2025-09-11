@@ -4,7 +4,7 @@ import sage.exception.SageException;
 import sage.storage.Storage;
 import sage.task.Task;
 import sage.task.TaskList;
-import sage.ui.Ui;
+import sage.task.Ui;
 
 /**
  * Represents an abstract command for adding a task.
@@ -30,13 +30,13 @@ public abstract class AddCommand extends Command {
      * @param storage The Storage to save the updated task list.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
+    public String executeAndReturn(TaskList tasks, Ui ui, Storage storage) {
         tasks.addTask(task);
-        ui.showMessage("Got it. I've added this task:\n   " + task + "\nNow you have " + tasks.size() + " tasks in the list.");
         try {
             storage.save(tasks.getTasks());
         } catch (SageException e) {
-            ui.showError(e.getMessage());
+            return ui.showErrorAndReturn(e.getMessage());
         }
+        return ui.showMessageAndReturn("Got it. I've added this task:\n   " + task + "\nNow you have " + tasks.size() + " tasks in the list.");
     }
 }

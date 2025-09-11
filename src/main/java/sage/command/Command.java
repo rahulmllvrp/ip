@@ -2,7 +2,7 @@ package sage.command;
 
 import sage.storage.Storage;
 import sage.task.TaskList;
-import sage.ui.Ui;
+import sage.task.Ui;
 import sage.exception.SageException;
 
 /**
@@ -17,7 +17,7 @@ public abstract class Command {
      * @param storage The Storage to save/load tasks.
      * @throws SageException If an error occurs during command execution.
      */
-    public abstract void execute(TaskList tasks, Ui ui, Storage storage) throws SageException;
+    public abstract String executeAndReturn(TaskList tasks, Ui ui, Storage storage) throws SageException;
 
     /**
      * Returns true if this command is an exit command, indicating the chatbot should terminate.

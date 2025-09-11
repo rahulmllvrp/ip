@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'org.openjfx.javafxplugin' version '0.0.10'
 }
 
 repositories {
@@ -28,7 +29,7 @@ test {
 }
 
 application {
-    mainClass.set("sage.main.Sage")
+    mainClass.set("sage.gui.Main")
 }
 
 shadowJar {
@@ -38,4 +39,9 @@ shadowJar {
 
 run{
     standardInput = System.in
+}
+
+javafx {
+    version = "17.0.1"
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
