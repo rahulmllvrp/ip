@@ -61,7 +61,10 @@ public class Storage {
     public void save(ArrayList<Task> tasks) throws SageException {
         try (FileWriter fw = new FileWriter(file)) {
             for (Task task : tasks) {
-                fw.write(task.toFileString() + "\n");
+                            String content = tasks.stream()
+                                  .map(Task::toFileString)
+                                  .collect(Collectors.joining("\n"));
+            fw.write(content);
             }
         } catch (IOException e) {
             throw new SageException("Error saving tasks to file: " + e.getMessage());
