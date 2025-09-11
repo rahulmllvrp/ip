@@ -109,4 +109,20 @@ public class TaskList {
                 .filter(task -> task.getDescription().contains(keyword))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
+
+    /**
+     * Returns a list of Deadline tasks that are due within the next 24 hours and are not done.
+     * @return An ArrayList of upcoming Deadline tasks.
+     */
+    public ArrayList<Deadline> getUpcomingDeadlines() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime twentyFourHoursLater = now.plus(24, ChronoUnit.HOURS);
+
+        return tasks.stream()
+                .filter(task -> task instanceof Deadline)
+                .map(task -> (Deadline) task)
+                .filter(deadline -> !deadline.isDone() && deadline.getBy().isAfter(now) && deadline.getBy().isBefore(twentyFourHoursLater))
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+}
 }

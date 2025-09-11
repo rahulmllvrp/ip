@@ -1,11 +1,13 @@
 package sage.main;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import sage.command.Command;
 import sage.exception.SageException;
 import sage.parser.Parser;
 import sage.storage.Storage;
+import sage.task.Deadline;
 import sage.task.TaskList;
 import sage.task.Ui;
 
@@ -37,6 +39,11 @@ public class Sage {
         } catch (SageException e) {
             ui.getLoadingError();
             tasks = new TaskList();
+        }
+
+        ArrayList<Deadline> upcomingDeadlines = tasks.getUpcomingDeadlines();
+        if (!upcomingDeadlines.isEmpty()) {
+            ui.getMessage(ui.getUpcomingDeadlinesMessage(upcomingDeadlines));
         }
     }
 

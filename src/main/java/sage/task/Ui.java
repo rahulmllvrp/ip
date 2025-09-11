@@ -55,5 +55,17 @@ public class Ui {
         }
         return sb.toString();
     }
+
+    public String getUpcomingDeadlinesMessage(ArrayList<Deadline> deadlines) {
+        if (deadlines.isEmpty()) {
+            return UiMessages.NO_UPCOMING_DEADLINES;
+        }
+
+        StringBuilder sb = new StringBuilder(UiMessages.UPCOMING_DEADLINES_HEADER);
+        for (int i = 0; i < deadlines.size(); i++) {
+            sb.append(" ").append(i + 1).append(".").append(deadlines.get(i).toString()).append("\n");
+        }
+        return sb.toString();
+    }
 }
 
