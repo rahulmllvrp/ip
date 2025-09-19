@@ -11,6 +11,7 @@ import sage.command.Command;
 import sage.command.DeleteCommand;
 import sage.command.ExitCommand;
 import sage.command.FindCommand;
+import sage.command.HelpCommand;
 import sage.command.ListCommand;
 import sage.command.MarkCommand;
 import sage.command.UnmarkCommand;
@@ -55,110 +56,13 @@ public class Parser {
             return parseEventCommand(arguments);
         case CommandWords.FIND:
             return parseFindCommand(arguments);
+        case CommandWords.HELP:
+            return new HelpCommand();
         default:
-            throw new SageException("I'm sorry, but I don't know what that means :-(");
+            throw new SageException("I'm sorry, but I don't know what that means :-( Try 'help' to see available commands.");
         }
     }
 
-    /**
-     * Parses arguments for a 'mark' command and returns a MarkCommand object.
-     * @param arguments The arguments string for the 'mark' command.
-     * @return A MarkCommand object.
-     * @throws SageException If the arguments are invalid or missing.
-     */
-    private static Command parseMarkCommand(String arguments) throws SageException {
-        assert arguments != null : "Arguments string cannot be null";
-        if (arguments.isEmpty()) {
-            throw new SageException("Please specify the task number to mark.");
-        }
-        int taskIndex = Integer.parseInt(arguments) - 1;
-        return new MarkCommand(taskIndex);
-    }
-
-    /**
-     * Parses arguments for an 'unmark' command and returns an UnmarkCommand object.
-     * @param arguments The arguments string for the 'unmark' command.
-     * @return An UnmarkCommand object.
-     * @throws SageException If the arguments are invalid or missing.
-     */
-    private static Command parseUnmarkCommand(String arguments) throws SageException {
-        assert arguments != null : "Arguments string cannot be null";
-        if (arguments.isEmpty()) {
-            throw new SageException("Please specify the task number to unmark.");
-        }
-        int taskIndex = Integer.parseInt(arguments) - 1;
-        return new UnmarkCommand(taskIndex);
-    }
-
-    /**
-     * Parses arguments for a 'delete' command and returns a DeleteCommand object.
-     * @param arguments The arguments string for the 'delete' command.
-     * @return A DeleteCommand object.
-     * @throws SageException If the arguments are invalid or missing.
-     */
-    private static Command parseDeleteCommand(String arguments) throws SageException {
-        assert arguments != null : "Arguments string cannot be null";
-        if (arguments.isEmpty()) {
-            throw new SageException("Please specify the task number to delete.");
-        }
-        int taskIndex = Integer.parseInt(arguments) - 1;
-        return new DeleteCommand(taskIndex);
-    }
-
-    /**
-     * Parses arguments for a 'todo' command and returns an AddTodoCommand object.
-     * @param arguments The arguments string for the 'todo' command.
-     * @return An AddTodoCommand object.
-     * @throws SageException If the arguments are invalid or missing.
-     */
-    private static Command parseTodoCommand(String arguments) throws SageException {
-        assert arguments != null : "Arguments string cannot be null";
-        if (arguments.trim().isEmpty()) {
-            throw new SageException("The description of a todo cannot be empty.");
-        }
-        return new AddTodoCommand(arguments);
-    }
-
-    /**
-     * Parses arguments for a 'deadline' command and returns an AddDeadlineCommand object.
-     * @param arguments The arguments string for the 'deadline' command.
-     * @return An AddDeadlineCommand object.
-     * @throws SageException If the arguments are invalid or missing, or date format is incorrect.
-     */
-    private static Command parseDeadlineCommand(String arguments) throws SageException {
-        assert arguments != null : "Arguments string cannot be null";
-        if (arguments.trim().isEmpty()) {
-            throw new SageException("The description of a deadline cannot be empty.");
-        }
-        if (!arguments.contains(" /by ")) {
-            throw new SageException("Invalid deadline format. Please use: deadline <description> /by <d/M/yyyy HHmm>");
-        }
-        String[] deadlineParts = arguments.split(" /by ");
-        LocalDateTime by = parseDateTime(deadlineParts[1]);
-        return new AddDeadlineCommand(deadlineParts[0], by);
-    }
-
-    /**
-     * Parses arguments for an 'event' command and returns an AddEventCommand object.
-     * @param arguments The arguments string for the 'event' command.
-     * @return An AddEventCommand object.
-     * @throws SageException If the arguments are invalid or missing, or date format is incorrect.
-     */
-    private static Command parseEventCommand(String arguments) throws SageException {
-        assert arguments != null : "Arguments string cannot be null";
-        if (arguments.trim().isEmpty()) {
-            throw new SageException("The description of an event cannot be empty.");
-        }
-        if (!arguments.contains(" /from ") || !arguments.contains(" /to ")) {
-            throw new SageException("Invalid event format. Please use: event <description> /from <d/M/yyyy HHmm> /to <d/M/yyyy HHmm>");
-        }
-        String[] eventParts = arguments.split(" /from ");
-        String[] fromToParts = eventParts[1].split(" /to ");
-        LocalDateTime from = parseDateTime(fromToParts[0]);
-        LocalDateTime to = parseDateTime(fromToParts[1]);
-        return new AddEventCommand(eventParts[0], from, to);
-    }
-  
     private static void ensureArgumentsNotEmpty(String arguments, String errorMessage) throws SageException {
         if (arguments.trim().isEmpty()) {
             throw new SageException(errorMessage);
@@ -174,8 +78,12 @@ public class Parser {
     private static Command parseMarkCommand(String arguments) throws SageException {
         assert arguments != null : "Arguments string cannot be null";
         ensureArgumentsNotEmpty(arguments, "Please specify the task number to mark.");
-        int taskIndex = Integer.parseInt(arguments) - 1;
-        return new MarkCommand(taskIndex);
+        try {
+            int taskIndex = Integer.parseInt(arguments.trim()) - 1;
+            return new MarkCommand(taskIndex);
+        } catch (NumberFormatException e) {
+            throw new SageException("Please enter a valid task number.");
+        }
     }
 
     /**
@@ -187,8 +95,12 @@ public class Parser {
     private static Command parseUnmarkCommand(String arguments) throws SageException {
         assert arguments != null : "Arguments string cannot be null";
         ensureArgumentsNotEmpty(arguments, "Please specify the task number to unmark.");
-        int taskIndex = Integer.parseInt(arguments) - 1;
-        return new UnmarkCommand(taskIndex);
+        try {
+            int taskIndex = Integer.parseInt(arguments.trim()) - 1;
+            return new UnmarkCommand(taskIndex);
+        } catch (NumberFormatException e) {
+            throw new SageException("Please enter a valid task number.");
+        }
     }
 
     /**
@@ -200,8 +112,12 @@ public class Parser {
     private static Command parseDeleteCommand(String arguments) throws SageException {
         assert arguments != null : "Arguments string cannot be null";
         ensureArgumentsNotEmpty(arguments, "Please specify the task number to delete.");
-        int taskIndex = Integer.parseInt(arguments) - 1;
-        return new DeleteCommand(taskIndex);
+        try {
+            int taskIndex = Integer.parseInt(arguments.trim()) - 1;
+            return new DeleteCommand(taskIndex);
+        } catch (NumberFormatException e) {
+            throw new SageException("Please enter a valid task number.");
+        }
     }
 
     /**
@@ -213,7 +129,7 @@ public class Parser {
     private static Command parseTodoCommand(String arguments) throws SageException {
         assert arguments != null : "Arguments string cannot be null";
         ensureArgumentsNotEmpty(arguments, "The description of a todo cannot be empty.");
-        return new AddTodoCommand(arguments);
+        return new AddTodoCommand(arguments.trim());
     }
 
     /**
@@ -228,9 +144,12 @@ public class Parser {
         if (!arguments.contains(" /by ")) {
             throw new SageException(ErrorMessages.INVALID_DEADLINE_FORMAT);
         }
-        String[] deadlineParts = arguments.split(" /by ");
-        LocalDateTime by = parseDateTime(deadlineParts[1]);
-        return new AddDeadlineCommand(deadlineParts[0], by);
+        String[] deadlineParts = arguments.split(" /by ", 2);
+        if (deadlineParts.length != 2 || deadlineParts[0].trim().isEmpty() || deadlineParts[1].trim().isEmpty()) {
+            throw new SageException(ErrorMessages.INVALID_DEADLINE_FORMAT);
+        }
+        LocalDateTime by = parseDateTime(deadlineParts[1].trim());
+        return new AddDeadlineCommand(deadlineParts[0].trim(), by);
     }
 
     /**
@@ -245,13 +164,20 @@ public class Parser {
         if (!arguments.contains(" /from ") || !arguments.contains(" /to ")) {
             throw new SageException(ErrorMessages.INVALID_EVENT_FORMAT);
         }
-        String[] eventParts = arguments.split(" /from ");
-        String[] fromToParts = eventParts[1].split(" /to ");
-        LocalDateTime from = parseDateTime(fromToParts[0]);
-        LocalDateTime to = parseDateTime(fromToParts[1]);
-        return new AddEventCommand(eventParts[0], from, to);
+        String[] eventParts = arguments.split(" /from ", 2);
+        if (eventParts.length != 2) {
+            throw new SageException(ErrorMessages.INVALID_EVENT_FORMAT);
+        }
+        String[] fromToParts = eventParts[1].split(" /to ", 2);
+        if (fromToParts.length != 2 || eventParts[0].trim().isEmpty()
+                || fromToParts[0].trim().isEmpty() || fromToParts[1].trim().isEmpty()) {
+            throw new SageException(ErrorMessages.INVALID_EVENT_FORMAT);
+        }
+        LocalDateTime from = parseDateTime(fromToParts[0].trim());
+        LocalDateTime to = parseDateTime(fromToParts[1].trim());
+        return new AddEventCommand(eventParts[0].trim(), from, to);
     }
-  
+
     /**
      * Parses the arguments for the find command and returns a FindCommand.
      *
@@ -262,11 +188,13 @@ public class Parser {
     private static Command parseFindCommand(String arguments) throws SageException {
         assert arguments != null : "Arguments string cannot be null";
         ensureArgumentsNotEmpty(arguments, "The keyword for find cannot be empty.");
-        return new FindCommand(arguments);
+        return new FindCommand(arguments.trim());
     }
 
     /**
      * Parses a date and time string into a LocalDateTime object.
+     * Accepts flexible date formats and provides helpful error messages.
+     *
      * @param dateTime The date and time string to parse (expected format: d/M/yyyy HHmm).
      * @return A LocalDateTime object representing the parsed date and time.
      * @throws SageException If the date and time string is not in the expected format.
@@ -278,19 +206,5 @@ public class Parser {
             throw new SageException(ErrorMessages.INVALID_DATE_FORMAT);
         }
     }
-}
 
-    /**
-     * Parses a date and time string into a LocalDateTime object.
-     * @param dateTime The date and time string to parse (expected format: d/M/yyyy HHmm).
-     * @return A LocalDateTime object representing the parsed date and time.
-     * @throws SageException If the date and time string is not in the expected format.
-     */
-    public static LocalDateTime parseDateTime(String dateTime) throws SageException {
-        try {
-            return LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern("d/M/yyyy HHmm"));
-        } catch (DateTimeParseException e) {
-            throw new SageException("Invalid date format. Please use: d/M/yyyy HHmm");
-        }
-    }
 }

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import sage.exception.SageException;
 import sage.task.Deadline;
@@ -60,12 +61,10 @@ public class Storage {
      */
     public void save(ArrayList<Task> tasks) throws SageException {
         try (FileWriter fw = new FileWriter(file)) {
-            for (Task task : tasks) {
-                            String content = tasks.stream()
-                                  .map(Task::toFileString)
-                                  .collect(Collectors.joining("\n"));
+            String content = tasks.stream()
+                    .map(Task::toFileString)
+                    .collect(Collectors.joining("\n"));
             fw.write(content);
-            }
         } catch (IOException e) {
             throw new SageException("Error saving tasks to file: " + e.getMessage());
         }

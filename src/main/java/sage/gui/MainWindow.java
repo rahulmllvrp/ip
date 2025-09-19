@@ -60,24 +60,41 @@ public class MainWindow extends AnchorPane {
 
     @FXML
     private void handleUserInput() {
-        String input = userInput.getText();
-        if (input.trim().isEmpty()) {
+        String input = userInput.getText().trim();
+        if (input.isEmpty()) {
             return; // Don't process empty messages
         }
 
-        String response = sage.getResponse(input);
+        // Disable input while processing to prevent multiple submissions
+        userInput.setDisable(true);
+        sendButton.setDisable(true);
 
-        dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input, userImage),
-                DialogBox.getSageDialog(response, botImage)
-        );
-        userInput.clear();
+        try {
+            String response = sage.getResponse(input);
 
-        // Force scrolling to bottom
-        scrollPane.setVvalue(1.0);
+            dialogContainer.getChildren().addAll(
+                    DialogBox.getUserDialog(input, userImage),
+                    DialogBox.getSageDialog(response, botImage)
+            );
+        } catch (Exception e) {
+            // Handle any unexpected errors gracefully
+            dialogContainer.getChildren().addAll(
+                    DialogBox.getUserDialog(input, userImage),
+                    DialogBox.getSageDialog("Sorry, an unexpected error occurred: " + e.getMessage(), botImage)
+            );
+        } finally {
+            // Re-enable input controls
+            userInput.setDisable(false);
+            sendButton.setDisable(false);
+            userInput.clear();
+            userInput.requestFocus(); // Keep focus on input field
+
+            // Force scrolling to bottom
+            scrollPane.setVvalue(1.0);
+        }
 
         // Close application if user types "bye"
-        if (input.trim().equalsIgnoreCase("bye")) {
+        if (input.equalsIgnoreCase("bye")) {
             // Add delay to allow seeing the goodbye message
             new Thread(() -> {
                 try {

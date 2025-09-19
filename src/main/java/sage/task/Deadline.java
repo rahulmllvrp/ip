@@ -32,6 +32,14 @@ public class Deadline extends Task {
     }
 
     /**
+     * Gets the due date and time of this deadline.
+     * @return The LocalDateTime representing when this deadline is due.
+     */
+    public LocalDateTime getBy() {
+        return by;
+    }
+
+    /**
      * Returns a string representation of the Deadline task suitable for saving to a file.
      * The format is: D | <status> | <description> | <due_date_time>
      * The due date/time is saved in ISO 8601 format.

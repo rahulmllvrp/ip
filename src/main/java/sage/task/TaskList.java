@@ -1,8 +1,12 @@
 package sage.task;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.stream.Collectors;
+
+import sage.util.UiMessages;
 
 /**
  * Represents a list of tasks.
@@ -69,7 +73,7 @@ public class TaskList {
      * @return The ArrayList containing all tasks.
      */
     public ArrayList<Task> getTasks() {
-        return (ArrayList<Task>) Collections.unmodifiableList(tasks);
+        return new ArrayList<>(tasks);
     }
 
     /**
@@ -124,5 +128,4 @@ public class TaskList {
                 .filter(deadline -> !deadline.isDone() && deadline.getBy().isAfter(now) && deadline.getBy().isBefore(twentyFourHoursLater))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
-}
 }
