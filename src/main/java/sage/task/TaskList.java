@@ -82,6 +82,9 @@ public class TaskList {
      * @return A string containing the numbered list of tasks.
      */
     public String getTasksAsString() {
+        if (tasks.isEmpty()) {
+            return "Your task list is empty! Add some tasks to get started.";
+        }
         StringBuilder sb = new StringBuilder(UiMessages.TASKS_LIST_HEADER);
         for (int i = 0; i < tasks.size(); i++) {
             sb.append((i + 1) + "." + tasks.get(i).toString() + "\n");

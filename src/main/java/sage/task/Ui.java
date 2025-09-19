@@ -73,25 +73,18 @@ public class Ui {
      * @return A formatted string containing help information.
      */
     public String getHelpMessage() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Here are the commands I understand:\n\n");
-        sb.append("📋 TASK MANAGEMENT:\n");
-        sb.append("  • todo <description> - Add a simple task\n");
-        sb.append("  • deadline <description> /by <d/M/yyyy HHmm> - Add a task with deadline\n");
-        sb.append("  • event <description> /from <d/M/yyyy HHmm> /to <d/M/yyyy HHmm> - Add an event\n\n");
-        sb.append("✅ TASK ACTIONS:\n");
-        sb.append("  • list - Show all tasks\n");
-        sb.append("  • mark <task number> - Mark a task as done\n");
-        sb.append("  • unmark <task number> - Mark a task as not done\n");
-        sb.append("  • delete <task number> - Remove a task\n\n");
-        sb.append("🔍 SEARCH:\n");
-        sb.append("  • find <keyword> - Find tasks containing the keyword\n\n");
-        sb.append("ℹ️ OTHER:\n");
-        sb.append("  • help - Show this help message\n");
-        sb.append("  • bye - Exit the application\n\n");
-        sb.append("📅 Date format: d/M/yyyy HHmm (e.g., 2/12/2024 1800)\n");
-        sb.append("💡 Tip: Task numbers start from 1");
-        return sb.toString();
+        return "Available commands:\n" +
+               "- todo <description>\n" +
+               "- deadline <description> /by <date>\n" +
+               "- event <description> /from <date> /to <date>\n" +
+               "- list\n" +
+               "- mark <number>\n" +
+               "- unmark <number>\n" +
+               "- delete <number>\n" +
+               "- find <keyword>\n" +
+               "- help\n" +
+               "- bye\n\n" +
+               "Date format: d/M/yyyy HHmm";
     }
 
     /**
