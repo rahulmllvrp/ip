@@ -280,7 +280,7 @@ Your tasks are automatically saved after every command, so you never lose your d
 
 ## Technical Information
 
-- **Developed by**: CS2103T Student
+- **Developed by**: Rahul Mallavarapu
 - **Built with**: Java 17, JavaFX 17.0.1
 - **Storage**: Local file system (`./data/sage.txt`)
 - **Platform**: Cross-platform (Windows, macOS, Linux)
