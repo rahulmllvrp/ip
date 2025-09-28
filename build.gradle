@@ -12,26 +12,12 @@ repositories {
 dependencies {
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.10.0'
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.10.0'
-    
-    // Add these JavaFX dependencies explicitly
-    implementation "org.openjfx:javafx-controls:17.0.1"
-    implementation "org.openjfx:javafx-fxml:17.0.1"
-    
-    // Add platform-specific JavaFX dependencies for fat JAR
-    runtimeOnly "org.openjfx:javafx-controls:17.0.1:win"
-    runtimeOnly "org.openjfx:javafx-controls:17.0.1:linux"
-    runtimeOnly "org.openjfx:javafx-controls:17.0.1:mac"
-    runtimeOnly "org.openjfx:javafx-fxml:17.0.1:win"
-    runtimeOnly "org.openjfx:javafx-fxml:17.0.1:linux"
-    runtimeOnly "org.openjfx:javafx-fxml:17.0.1:mac"
 }
 
 test {
     useJUnitPlatform()
-
     testLogging {
         events "passed", "skipped", "failed"
-
         showExceptions true
         exceptionFormat "full"
         showCauses true
@@ -44,26 +30,22 @@ application {
     mainClass.set("sage.Launcher")
 }
 
+javafx {
+    version = "17.0.1"
+    modules = ['javafx.controls', 'javafx.fxml']
+}
+
 shadowJar {
     archiveBaseName = "sage"
     archiveClassifier = null
     
-    // Ensure JavaFX modules are included
-    configurations = [project.configurations.runtimeClasspath]
-    
-    // Handle JavaFX module system
     manifest {
         attributes(
-            'Main-Class': 'sage.gui.Main'
+            'Main-Class': 'sage.Launcher'
         )
     }
 }
 
-run{
+run {
     standardInput = System.in
-}
-
-javafx {
-    version = "17.0.1"
-    modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
